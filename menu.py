@@ -104,8 +104,7 @@ for category, items in menu.items():
         for item, price in items.items():
             quantity = st.number_input(f"{item} (₹ {price})", min_value=0, max_value=10, step=1, key=f"{category}_{item}")
             if quantity > 0:
-                selected_items[item] = quantity  # Now it will work without error
-
+                selected_items[item] = {"Quantity": quantity, "Price (₹)": price * quantity}  # ✅ Stores both quantity & price
 # Add Name and Phone Number Input Fields
 name = st.text_input("Enter your name:")
 phone = st.text_input("Enter your phone number:", max_chars=10, help="Enter a 10-digit phone number")
@@ -118,7 +117,11 @@ st.markdown("<style> label { color: white; font-size: 18px; } </style>", unsafe_
 if st.button("🛒 View Order"):
     st.subheader("Your Selected Items")
     for item, details in selected_items.items():
+    if isinstance(details, dict) and "Quantity" in details and "Price (₹)" in details:
         st.write(f"{item} - {details['Quantity']} x ₹{details['Price (₹)']}")
+    else:
+        st.write(f"{item} - {details} (Invalid data structure)")
+
     st.write(f"**Total: ₹ {sum(details['Price (₹)'] for details in selected_items.values())}**")
 
 
