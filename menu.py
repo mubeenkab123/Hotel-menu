@@ -122,13 +122,26 @@ st.markdown("<style> label { color: white; font-size: 18px; } </style>", unsafe_
 
 order_placeholder = st.empty()  # Create a placeholder
 
+if "selected_items" not in st.session_state:
+    st.session_state.selected_items = {}
+
 if st.button("🛒 View Order"):
-    with order_placeholder:
+    if st.session_state.selected_items:
         st.subheader("Your Selected Items")
-        for item, details in st.session_state.selected_items.items():
-            st.write(f"{item} - {details['Quantity']} x ₹{details['Price (₹)']}")
-        total_price = sum(details['Price (₹)'] for details in st.session_state.selected_items.values())
-        st.write(f"**Total: ₹ {total_price}**")
+
+        # Convert selected items to a DataFrame for table display
+        order_data = [
+            {"Item": item, "Quantity": details["Quantity"], "Total Price (₹)": details["Price (₹)"]}
+            for item, details in st.session_state.selected_items.items()
+        ]
+        df_order = pd.DataFrame(order_data)
+
+        st.table(df_order)  # Display the structured table
+
+        total_price = sum(details["Price (₹)"] for details in st.session_state.selected_items.values())
+        st.write(f"**💰 Total: ₹ {total_price}**")
+    else:
+        st.write("🛒 No items selected yet.")
 
 # Order Processing
 if st.button("✅ Place Order"):
