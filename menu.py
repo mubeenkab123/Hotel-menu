@@ -115,6 +115,13 @@ table_number = st.text_input("Enter your table number:", help="Enter your assign
 # Ensure the input fields are styled properly
 st.markdown("<style> label { color: white; font-size: 18px; } </style>", unsafe_allow_html=True)
 
+if st.button("🛒 View Order"):
+    st.subheader("Your Selected Items")
+    for item, details in selected_items.items():
+        st.write(f"{item} - {details['Quantity']} x ₹{details['Price (₹)']}")
+    st.write(f"**Total: ₹ {sum(details['Price (₹)'] for details in selected_items.values())}**")
+
+
 # Order Processing
 if st.button("✅ Place Order"):
     if not name:
