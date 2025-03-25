@@ -103,8 +103,14 @@ for category, items in menu.items():
     with st.expander(f"{emoji} **{category}**"):
         for item, price in items.items():
             quantity = st.number_input(f"{item} (₹ {price})", min_value=0, max_value=10, step=1, key=f"{category}_{item}")
+            
+            if "selected_items" not in st.session_state:
+                st.session_state.selected_items = {}
+
             if quantity > 0:
-                selected_items[item] = {"Quantity": quantity, "Price (₹)": price * quantity}  # ✅ Stores both quantity & price
+                st.session_state.selected_items[item] = {"Quantity": quantity, "Price (₹)": price * quantity}
+            elif item in st.session_state.selected_items and quantity == 0:
+                del st.session_state.selected_items[item]  # Remove items with 0 quantity
 # Add Name and Phone Number Input Fields
 name = st.text_input("Enter your name:")
 phone = st.text_input("Enter your phone number:", max_chars=10, help="Enter a 10-digit phone number")
@@ -114,16 +120,15 @@ table_number = st.text_input("Enter your table number:", help="Enter your assign
 # Ensure the input fields are styled properly
 st.markdown("<style> label { color: white; font-size: 18px; } </style>", unsafe_allow_html=True)
 
+order_placeholder = st.empty()  # Create a placeholder
+
 if st.button("🛒 View Order"):
-    st.subheader("Your Selected Items")
-    for item, details in selected_items.items():
-        if isinstance(details, dict) and "Quantity" in details and "Price (₹)" in details:
+    with order_placeholder:
+        st.subheader("Your Selected Items")
+        for item, details in st.session_state.selected_items.items():
             st.write(f"{item} - {details['Quantity']} x ₹{details['Price (₹)']}")
-        else:
-            st.write(f"{item} - {details} (Invalid data structure)")
-
-    st.write(f"**Total: ₹ {sum(details['Price (₹)'] for details in selected_items.values())}**")
-
+        total_price = sum(details['Price (₹)'] for details in st.session_state.selected_items.values())
+        st.write(f"**Total: ₹ {total_price}**")
 
 # Order Processing
 if st.button("✅ Place Order"):
