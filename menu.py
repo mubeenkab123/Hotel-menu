@@ -172,7 +172,6 @@ if st.button("✅ Place Order"):
         st.session_state.selected_items = {}
 
 
-        st.success(f"✅ Order placed successfully!\n\n🛒 Items: {order_str}\n📞 Phone: {phone}\n🪑 Table: {table_number}\n💰 Total: ₹ {total_price}")
-    else:
-        st.warning("⚠️ Please select at least one item to order.")
+    st.success(f"✅ Order placed successfully!\n\n🛒 Items: {order_str}\n📞 Phone: {phone}\n🪑 Table: {table_number}\n💰 Total: ₹ {total_price}")
+
 
