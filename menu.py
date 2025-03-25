@@ -117,10 +117,10 @@ st.markdown("<style> label { color: white; font-size: 18px; } </style>", unsafe_
 if st.button("🛒 View Order"):
     st.subheader("Your Selected Items")
     for item, details in selected_items.items():
-    if isinstance(details, dict) and "Quantity" in details and "Price (₹)" in details:
-        st.write(f"{item} - {details['Quantity']} x ₹{details['Price (₹)']}")
-    else:
-        st.write(f"{item} - {details} (Invalid data structure)")
+        if isinstance(details, dict) and "Quantity" in details and "Price (₹)" in details:
+            st.write(f"{item} - {details['Quantity']} x ₹{details['Price (₹)']}")
+        else:
+            st.write(f"{item} - {details} (Invalid data structure)")
 
     st.write(f"**Total: ₹ {sum(details['Price (₹)'] for details in selected_items.values())}**")
 
